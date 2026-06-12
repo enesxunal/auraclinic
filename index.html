@@ -1,38 +1,38 @@
 <!DOCTYPE html>
-<html lang="de">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Hairgent Düsseldorf — Haaranalyse, Haartransplantation, medizinische Expertise." />
-  <title>Hairgent — Düsseldorf</title>
-  <link rel="icon" type="image/png" href="hairgent-favicon.png" />
+  <meta name="description" content="Aura Clinic Tbilisi — hair transplantation, aesthetic treatments, HydraFacial, filler &amp; botox, body contouring." />
+  <title>Aura Clinic — Tbilisi</title>
+  <link rel="icon" type="image/svg+xml" href="aura-fav.svg" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;0,800&family=Noto+Sans+Georgian:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
   <header class="site-header" id="site-header">
     <div class="container header-inner">
       <a href="#hero" class="brand">
-        <img src="hairgent-Logo White.png" alt="Hairgent" width="180" height="48" class="brand-logo" />
+        <img src="aura-logo.svg" alt="Aura Clinic" width="180" height="48" class="brand-logo" />
       </a>
       <button type="button" class="nav-toggle" id="nav-toggle" aria-expanded="false" aria-controls="main-nav">
         <span class="nav-toggle-bar" aria-hidden="true"></span>
         <span class="nav-toggle-bar" aria-hidden="true"></span>
         <span class="nav-toggle-bar" aria-hidden="true"></span>
       </button>
-      <nav class="nav-main" id="main-nav" aria-label="Hauptnavigation">
-        <a href="#hero" data-i18n="nav.home">Start</a>
-        <a href="#leistungen" data-i18n="nav.services">Leistungen</a>
-        <a href="#about" data-i18n="nav.about">Über uns</a>
-        <a href="#analysis" class="nav-link--highlight" data-i18n="nav.analysis">Analyse</a>
-        <a href="#contact" data-i18n="nav.contact">Kontakt</a>
+      <nav class="nav-main" id="main-nav" aria-label="Main navigation">
+        <a href="#hero" data-i18n="nav.home">Home</a>
+        <a href="#services" data-i18n="nav.services">Services</a>
+        <a href="#about" data-i18n="nav.about">About</a>
+        <a href="#analysis" class="nav-link--highlight" data-i18n="nav.analysis">Analysis</a>
+        <a href="#contact" data-i18n="nav.contact">Contact</a>
       </nav>
-      <div class="lang-switcher" role="group" aria-label="Sprache">
-        <button type="button" class="lang-btn is-active" data-lang="de" aria-pressed="true">DE</button>
+      <div class="lang-switcher" role="group" aria-label="Language">
+        <button type="button" class="lang-btn is-active" data-lang="en" aria-pressed="true">EN</button>
+        <button type="button" class="lang-btn" data-lang="ka" aria-pressed="false">KA</button>
         <button type="button" class="lang-btn" data-lang="tr" aria-pressed="false">TR</button>
-        <button type="button" class="lang-btn" data-lang="en" aria-pressed="false">EN</button>
       </div>
     </div>
     <div class="nav-backdrop" id="nav-backdrop" aria-hidden="true"></div>
@@ -44,50 +44,66 @@
       <div class="container hero-layout">
         <div class="hero-visual">
           <img
-            src="media/hero-split.png"
-            alt="Vorher-Nachher-Vergleich: Haarlinie und Dichte"
+            src="media/media-hero.png"
+            alt="Hair restoration before and after — Aura Clinic"
             class="hero-split-img"
-            width="720"
+            width="1440"
             height="900"
             loading="eager"
           />
         </div>
         <div class="hero-content">
-          <p class="hero-eyebrow" data-i18n="hero.eyebrow">Medizinische Haar-Expertise · Düsseldorf</p>
-          <h1 data-i18n="hero.title">Präzision. Natürlichkeit. Vertrauen.</h1>
+          <p class="hero-eyebrow" data-i18n="hero.eyebrow">Aesthetic clinic · Tbilisi</p>
+          <h1 data-i18n="hero.title">Every graft matters. Every detail counts.</h1>
           <p class="hero-lead" data-i18n="hero.lead">
-            Hairgent verbindet deutsche medizinische Standards mit modernster Technik — für Ergebnisse, die zu Ihnen passen.
+            Aura Clinic combines advanced hair restoration with premium aesthetic care — natural results, modern technology, and a team that listens.
           </p>
-          <a href="#analysis" class="btn btn-primary" data-i18n="hero.cta">Zur kostenlosen Analyse</a>
+          <a href="#analysis" class="btn btn-primary" data-i18n="hero.cta">Free hair analysis</a>
         </div>
       </div>
     </section>
 
-    <section id="leistungen" class="leistungen section">
-      <div class="container leistungen-grid">
-        <div class="leistungen-visual">
-          <img
-            src="media/Hairgent-image-1.png"
-            alt="Hairgent Behandlungsschwerpunkte — medizinische Haarästhetik"
-            class="leistungen-photo"
-            width="800"
-            height="800"
-            loading="lazy"
-          />
-        </div>
-        <div class="leistungen-text">
-          <h2 data-i18n="services.title">Behandlungsschwerpunkte</h2>
-          <p data-i18n="services.p1">
-            Von der Haarlinie bis zur Dichte — wir planen Ihren Eingriff mit klarer medizinischer Begründung und realistischen Erwartungen.
+    <section id="services" class="services section">
+      <div class="services-bg" aria-hidden="true">
+        <img src="media/media-services-bg.png" alt="" width="1920" height="600" loading="lazy" />
+      </div>
+      <div class="container">
+        <header class="section-head">
+          <h2 data-i18n="services.sectionTitle">Our services</h2>
+          <p class="section-sub" data-i18n="services.sectionSub">
+            From hair restoration to skin and body treatments — personalised plans in a calm, premium setting.
           </p>
-          <p class="leistungen-note" data-i18n="services.note">
-            Jede Kopfhaut ist anders — deshalb planen wir individuell, ohne Einheitslösungen.
-          </p>
-          <ul class="leistungen-list">
-            <li data-i18n="services.li1">Haartransplantation (FUE / DHI)</li>
-            <li data-i18n="services.li2">Beratung &amp; digitale Haar-Analyse</li>
-            <li data-i18n="services.li3">Nachsorge &amp; Verlaufskontrolle</li>
-          </ul>
+        </header>
+        <div class="services-grid">
+          <article class="service-card service-card--featured">
+            <span class="service-badge" data-i18n="svc.hair.badge">Signature service</span>
+            <div class="service-icon" aria-hidden="true">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2c-2 4-6 5-6 10a6 6 0 0012 0c0-5-4-6-6-10z"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/></svg>
+            </div>
+            <h3 data-i18n="svc.hair.title">Hair transplantation</h3>
+            <p data-i18n="svc.hair.desc">FUE &amp; DHI techniques with precise graft handling, natural hairlines, and structured aftercare for lasting density.</p>
+          </article>
+          <article class="service-card">
+            <div class="service-icon" aria-hidden="true">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="3"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+            </div>
+            <h3 data-i18n="svc.filler.title">Dermal filler &amp; botox</h3>
+            <p data-i18n="svc.filler.desc">Subtle facial rejuvenation and contour refinement — measured doses, natural expression, medically supervised application.</p>
+          </article>
+          <article class="service-card">
+            <div class="service-icon" aria-hidden="true">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 3c-4 6-8 7-8 12a8 8 0 1016 0c0-5-4-6-8-12z"/></svg>
+            </div>
+            <h3 data-i18n="svc.hydra.title">HydraFacial &amp; deep cleansing</h3>
+            <p data-i18n="svc.hydra.desc">Multi-step facial cleansing and hydration — clearer skin, refined pores, and a refreshed glow with no downtime.</p>
+          </article>
+          <article class="service-card">
+            <div class="service-icon" aria-hidden="true">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 14c2-4 4-6 8-6s6 2 8 6"/><path d="M6 18h12"/><ellipse cx="12" cy="10" rx="8" ry="3"/></svg>
+            </div>
+            <h3 data-i18n="svc.g5.title">G5 massage &amp; body contouring</h3>
+            <p data-i18n="svc.g5.desc">Targeted G5 massage for regional slimming and fat breakdown — supportive sessions alongside a healthy lifestyle.</p>
+          </article>
         </div>
       </div>
     </section>
@@ -95,31 +111,30 @@
     <section id="about" class="about section">
       <div class="container about-grid">
         <div class="about-text">
-          <h2 data-i18n="about.title">Klinik mit klarem Fokus</h2>
+          <h2 data-i18n="about.title">Beauty and medicine, in balance</h2>
           <p data-i18n="about.p1">
-            In Düsseldorf begleiten wir Patientinnen und Patienten mit transparenter Beratung und individuellen Behandlungsplänen — von der ersten Analyse bis zur Nachsorge.
+            Aura Clinic is a modern aesthetic centre in Tbilisi where hair restoration is our core expertise — supported by trusted facial and body treatments under one roof.
           </p>
           <p data-i18n="about.p2">
-            Unser Ansatz: ruhige Ästhetik, evidenzbasierte Methoden und eine Atmosphäre, in der Sie sich sicher fühlen.
+            We invest in current technology, vitamin-enriched graft care, and comfortable protocols — so your experience feels calm, clear, and professionally guided from the first consultation.
           </p>
           <p class="about-note" data-i18n="about.note">
-            Wir erklären Chancen und Grenzen ehrlich — ohne unrealistische Versprechen.
+            We explain what is realistic for your case — no exaggerated promises, only honest planning.
           </p>
           <ul class="about-list">
-            <li data-i18n="about.li1">DHI &amp; FUE nach medizinischen Kriterien</li>
-            <li data-i18n="about.li2">Persönliche Protokolle statt Standardlösungen</li>
-            <li data-i18n="about.li3">Diskrete Betreuung in deutscher Sprache</li>
+            <li data-i18n="about.li1">Advanced FUE / DHI hair transplantation</li>
+            <li data-i18n="about.li2">Latest devices for skin and body treatments</li>
+            <li data-i18n="about.li3">Multilingual team — English, Georgian, Turkish</li>
           </ul>
         </div>
         <div class="about-visual">
           <img
-            src="media/Hairgent-image-2.png"
-            alt="Hairgent — Beratung für Frauen und Männer"
+            src="media/media-about.png"
+            alt="Aura Clinic — premium aesthetic care"
             class="about-photo"
-            loading="lazy"
             width="800"
-            height="900"
-            onerror="this.onerror=null;this.src='hairgent-Profil photo.png';"
+            height="1000"
+            loading="lazy"
           />
           <div class="about-accent"></div>
         </div>
@@ -129,40 +144,40 @@
     <section id="analysis" class="analysis section">
       <div class="container">
         <header class="section-head">
-          <h2 data-i18n="analysis.sectionTitle">Interaktive Haar-Analyse</h2>
+          <h2 data-i18n="analysis.sectionTitle">Interactive hair analysis</h2>
           <p class="section-sub" data-i18n="analysis.sectionSub">
-            Fünf kurze Schritte — danach erhalten Sie ein persönliches Hairgent-Protokoll.
+            Five short steps — then your personal Aura Clinic protocol. Photo-based AI preview coming soon.
           </p>
         </header>
 
         <div id="stepper-wrap" class="stepper-wrap">
-          <div class="progress-bar" role="progressbar" aria-valuemin="1" aria-valuemax="5" aria-valuenow="1" aria-label="Fortschritt">
+          <div class="progress-bar" role="progressbar" aria-valuemin="1" aria-valuemax="5" aria-valuenow="1" aria-label="Progress">
             <div class="progress-fill" id="progress-fill" style="width: 20%"></div>
           </div>
-          <p class="step-label"><span data-i18n="analysis.step">Schritt</span> <span id="step-num">1</span> / 5</p>
+          <p class="step-label"><span data-i18n="analysis.step">Step</span> <span id="step-num">1</span> / 5</p>
 
           <div class="step-panels">
             <fieldset class="step-panel is-active" data-step="1" aria-required="true">
-              <legend class="step-question" data-i18n="q.gender">Geschlecht</legend>
-              <p class="step-hint" data-i18n="analysis.pickOne">Bitte nur eine Antwort auswählen.</p>
-              <div class="options options--row-sm" role="radiogroup" aria-label="Geschlecht">
+              <legend class="step-question" data-i18n="q.gender">Gender</legend>
+              <p class="step-hint" data-i18n="analysis.pickOne">Please select only one answer.</p>
+              <div class="options options--row-sm" role="radiogroup" aria-label="Gender">
                 <label class="option option--single">
                   <input type="radio" name="gender" value="male" class="option__input" />
                   <span class="option__radio" aria-hidden="true"></span>
-                  <span class="option__text" data-i18n="opt.male">Männlich</span>
+                  <span class="option__text" data-i18n="opt.male">Male</span>
                 </label>
                 <label class="option option--single">
                   <input type="radio" name="gender" value="female" class="option__input" />
                   <span class="option__radio" aria-hidden="true"></span>
-                  <span class="option__text" data-i18n="opt.female">Weiblich</span>
+                  <span class="option__text" data-i18n="opt.female">Female</span>
                 </label>
               </div>
             </fieldset>
 
             <fieldset class="step-panel" data-step="2" hidden>
-              <legend class="step-question" data-i18n="q.age">Alter</legend>
-              <p class="step-hint" data-i18n="analysis.pickOne">Bitte nur eine Antwort auswählen.</p>
-              <div class="options" role="radiogroup" aria-label="Alter">
+              <legend class="step-question" data-i18n="q.age">Age</legend>
+              <p class="step-hint" data-i18n="analysis.pickOne">Please select only one answer.</p>
+              <div class="options" role="radiogroup" aria-label="Age">
                 <label class="option option--single">
                   <input type="radio" name="age" value="18-25" class="option__input" />
                   <span class="option__radio" aria-hidden="true"></span>
@@ -182,116 +197,116 @@
             </fieldset>
 
             <fieldset class="step-panel" data-step="3" hidden>
-              <legend class="step-question" data-i18n="q.area">Zielregion</legend>
-              <p class="step-hint" data-i18n="analysis.pickOne">Bitte nur eine Antwort auswählen.</p>
-              <div class="options options--stack" role="radiogroup" aria-label="Zielregion">
+              <legend class="step-question" data-i18n="q.area">Target area</legend>
+              <p class="step-hint" data-i18n="analysis.pickOne">Please select only one answer.</p>
+              <div class="options options--stack" role="radiogroup" aria-label="Target area">
                 <label class="option option--single">
                   <input type="radio" name="area" value="hairline" class="option__input" />
                   <span class="option__radio" aria-hidden="true"></span>
-                  <span class="option__text" data-i18n="opt.hairline">Haaransatz (frontal)</span>
+                  <span class="option__text" data-i18n="opt.hairline">Hairline (frontal)</span>
                 </label>
                 <label class="option option--single">
                   <input type="radio" name="area" value="crown" class="option__input" />
                   <span class="option__radio" aria-hidden="true"></span>
-                  <span class="option__text" data-i18n="opt.crown">Scheitel (Vertex)</span>
+                  <span class="option__text" data-i18n="opt.crown">Crown (vertex)</span>
                 </label>
                 <label class="option option--single">
                   <input type="radio" name="area" value="full" class="option__input" />
                   <span class="option__radio" aria-hidden="true"></span>
-                  <span class="option__text" data-i18n="opt.full">Gesamtkopfhaut</span>
+                  <span class="option__text" data-i18n="opt.full">Full scalp</span>
                 </label>
                 <label class="option option--single">
                   <input type="radio" name="area" value="beard" class="option__input" />
                   <span class="option__radio" aria-hidden="true"></span>
-                  <span class="option__text" data-i18n="opt.beard">Bart / Augenbrauen</span>
+                  <span class="option__text" data-i18n="opt.beard">Beard / eyebrows</span>
                 </label>
               </div>
             </fieldset>
 
             <fieldset class="step-panel" data-step="4" hidden>
-              <legend class="step-question" data-i18n="q.severity">Haarausfall — Schweregrad</legend>
-              <p class="step-hint" data-i18n="analysis.pickOne">Bitte nur eine Antwort auswählen.</p>
-              <div class="options options--stack" role="radiogroup" aria-label="Schweregrad">
+              <legend class="step-question" data-i18n="q.severity">Hair loss severity</legend>
+              <p class="step-hint" data-i18n="analysis.pickOne">Please select only one answer.</p>
+              <div class="options options--stack" role="radiogroup" aria-label="Severity">
                 <label class="option option--single">
                   <input type="radio" name="severity" value="light" class="option__input" />
                   <span class="option__radio" aria-hidden="true"></span>
-                  <span class="option__text" data-i18n="opt.light">Leicht (dünner werdend)</span>
+                  <span class="option__text" data-i18n="opt.light">Light (slight thinning)</span>
                 </label>
                 <label class="option option--single">
                   <input type="radio" name="severity" value="moderate" class="option__input" />
                   <span class="option__radio" aria-hidden="true"></span>
-                  <span class="option__text" data-i18n="opt.moderate">Mittel (sichtbare Kopfhaut)</span>
+                  <span class="option__text" data-i18n="opt.moderate">Moderate (visible scalp)</span>
                 </label>
                 <label class="option option--single">
                   <input type="radio" name="severity" value="advanced" class="option__input" />
                   <span class="option__radio" aria-hidden="true"></span>
-                  <span class="option__text" data-i18n="opt.advanced">Stark (kahle Areale)</span>
+                  <span class="option__text" data-i18n="opt.advanced">Advanced (bald areas)</span>
                 </label>
               </div>
             </fieldset>
 
             <fieldset class="step-panel" data-step="5" hidden>
-              <legend class="step-question" data-i18n="q.goal">Hauptziel</legend>
-              <p class="step-hint" data-i18n="analysis.pickOne">Bitte nur eine Antwort auswählen.</p>
-              <div class="options options--stack" role="radiogroup" aria-label="Hauptziel">
+              <legend class="step-question" data-i18n="q.goal">Main goal</legend>
+              <p class="step-hint" data-i18n="analysis.pickOne">Please select only one answer.</p>
+              <div class="options options--stack" role="radiogroup" aria-label="Main goal">
                 <label class="option option--single">
                   <input type="radio" name="goal" value="density" class="option__input" />
                   <span class="option__radio" aria-hidden="true"></span>
-                  <span class="option__text" data-i18n="opt.density">Maximale Dichte</span>
+                  <span class="option__text" data-i18n="opt.density">Maximum density</span>
                 </label>
                 <label class="option option--single">
                   <input type="radio" name="goal" value="natural" class="option__input" />
                   <span class="option__radio" aria-hidden="true"></span>
-                  <span class="option__text" data-i18n="opt.natural">Natürlicher Look</span>
+                  <span class="option__text" data-i18n="opt.natural">Natural look</span>
                 </label>
                 <label class="option option--single">
                   <input type="radio" name="goal" value="reconstruction" class="option__input" />
                   <span class="option__radio" aria-hidden="true"></span>
-                  <span class="option__text" data-i18n="opt.reconstruction">Rekonstruktion</span>
+                  <span class="option__text" data-i18n="opt.reconstruction">Reconstruction</span>
                 </label>
               </div>
             </fieldset>
           </div>
 
           <div class="step-nav">
-            <button type="button" class="btn btn-ghost btn--touch" id="btn-prev" data-i18n="analysis.back" disabled>Zurück</button>
-            <button type="button" class="btn btn-primary btn--touch" id="btn-next" data-i18n="analysis.next">Weiter</button>
+            <button type="button" class="btn btn-ghost btn--touch" id="btn-prev" data-i18n="analysis.back" disabled>Back</button>
+            <button type="button" class="btn btn-primary btn--touch" id="btn-next" data-i18n="analysis.next">Next</button>
           </div>
         </div>
 
         <div id="lead-gate" class="lead-gate" hidden>
           <div class="lead-inner card">
-            <h3 data-i18n="lead.title">Geben Sie Ihre Daten an, um Ihren detaillierten Analyse-Report zu erhalten.</h3>
+            <h3 data-i18n="lead.title">Enter your details to receive your detailed analysis report.</h3>
             <form id="lead-form" class="lead-form" action="send-mail.php" method="post" novalidate>
               <input type="hidden" name="protocol_id" id="field-protocol-id" />
               <input type="hidden" name="recommendation" id="field-recommendation" />
               <input type="hidden" name="graft_range" id="field-graft-range" />
               <input type="hidden" name="recovery" id="field-recovery" />
               <input type="hidden" name="answers_json" id="field-answers-json" />
-              <input type="hidden" name="lang" id="field-lang" value="de" />
+              <input type="hidden" name="lang" id="field-lang" value="en" />
 
               <label class="field">
                 <span data-i18n="lead.name">Name</span>
                 <input type="text" name="name" id="lead-name" required autocomplete="name" />
               </label>
               <label class="field">
-                <span data-i18n="lead.email">E-Mail</span>
+                <span data-i18n="lead.email">Email</span>
                 <input type="email" name="email" id="lead-email" required autocomplete="email" />
               </label>
               <label class="field">
-                <span data-i18n="lead.phone">Telefon</span>
+                <span data-i18n="lead.phone">Phone</span>
                 <input type="tel" name="phone" id="lead-phone" autocomplete="tel" />
               </label>
 
               <p class="privacy-hint" data-i18n="lead.privacy">
-                Ihre Daten werden nur zur Bearbeitung Ihrer Anfrage verwendet.
+                Your data will only be used to process your request.
               </p>
-              <button type="submit" class="btn btn-primary btn-block btn--touch" data-i18n="lead.submit">Report anfordern</button>
+              <button type="submit" class="btn btn-primary btn-block btn--touch" data-i18n="lead.submit">Request report</button>
             </form>
             <div id="form-success" class="form-success" hidden role="status"></div>
             <div id="form-error" class="form-error" hidden role="alert"></div>
             <div id="report-result" class="report-result" hidden>
-              <h3 class="report-result-heading" data-i18n="report.screenTitle">Ihr persönlicher Analyse-Report</h3>
+              <h3 class="report-result-heading" data-i18n="report.screenTitle">Your personal analysis report</h3>
               <div id="report-result-body" class="report-result-body"></div>
             </div>
           </div>
@@ -301,74 +316,74 @@
 
     <section id="contact" class="contact section">
       <div class="container contact-inner">
-        <h2 data-i18n="footer.contactTitle">Kontakt</h2>
-        <p class="contact-strong"><strong>Hairgent</strong> · Düsseldorf</p>
-        <p><a href="mailto:info@hairgent.de" class="link-muted">info@hairgent.de</a></p>
+        <h2 data-i18n="footer.contactTitle">Contact</h2>
+        <p class="contact-strong"><strong>Aura Clinic</strong> · Tbilisi, Georgia</p>
+        <p>
+          <a href="https://share.google/LE4JB2RqE96us8JDM" class="link-muted" target="_blank" rel="noopener noreferrer" data-i18n="contact.map">View on Google Maps</a>
+        </p>
+        <p><a href="tel:+995557168876" class="link-muted">+995 557 16 88 76</a></p>
+        <p><a href="tel:+995558217986" class="link-muted">+995 558 21 79 86</a></p>
+        <p><a href="mailto:info@auraclinicge.com" class="link-muted">info@auraclinicge.com</a></p>
         <p class="disclaimer" data-i18n="footer.disclaimer">
-          Hinweis: Diese Analyse ersetzt keine ärztliche Diagnose. Individuelle Beratung in der Praxis.
+          Note: This analysis does not replace a medical diagnosis. Individual consultation takes place at the clinic.
         </p>
       </div>
     </section>
   </main>
 
-  <div id="cookie-banner" class="cookie-banner" role="dialog" aria-live="polite" aria-label="Cookie-Hinweis" hidden>
+  <div id="cookie-banner" class="cookie-banner" role="dialog" aria-live="polite" aria-label="Cookie notice" hidden>
     <div class="cookie-banner-inner container">
       <p class="cookie-banner-text">
-        <span data-i18n="cookie.bannerPart1">Wir verwenden nur technisch notwendige Funktionen und — nach Ihrer Einwilligung — ggf. Analyse-Tools. Mehr in der </span>
-        <a href="cookies.html" data-i18n="cookie.bannerLink">Cookie-Richtlinie</a><span data-i18n="cookie.bannerPart2">.</span>
+        <span data-i18n="cookie.bannerPart1">We only use technically necessary features and — with your consent — optional analytics. More in our </span>
+        <a href="cookies.html" data-i18n="cookie.bannerLink">cookie policy</a><span data-i18n="cookie.bannerPart2">.</span>
       </p>
-      <button type="button" class="btn btn-primary cookie-banner-btn" id="cookie-accept" data-i18n="cookie.accept">Verstanden</button>
+      <button type="button" class="btn btn-primary cookie-banner-btn" id="cookie-accept" data-i18n="cookie.accept">OK</button>
     </div>
   </div>
 
   <footer class="site-footer">
     <div class="container footer-grid">
       <div class="footer-brand">
-        <img src="hairgent-Logo White.png" alt="" width="160" height="44" class="footer-logo" />
-        <p class="footer-tagline" data-i18n="footer.tagline">Haarästhetik mit medizinischer Klarheit — in Düsseldorf.</p>
+        <img src="aura-logo.svg" alt="" width="160" height="44" class="footer-logo brand-logo" />
+        <p class="footer-tagline" data-i18n="footer.tagline">Premium aesthetics &amp; hair restoration — Tbilisi.</p>
       </div>
       <div class="footer-col">
         <p class="footer-heading" data-i18n="footer.colNav">Navigation</p>
         <ul class="footer-links">
-          <li><a href="#leistungen" data-i18n="nav.services">Leistungen</a></li>
-          <li><a href="#about" data-i18n="nav.about">Über uns</a></li>
-          <li><a href="#analysis" data-i18n="nav.analysis">Analyse</a></li>
-          <li><a href="#contact" data-i18n="nav.contact">Kontakt</a></li>
+          <li><a href="#services" data-i18n="nav.services">Services</a></li>
+          <li><a href="#about" data-i18n="nav.about">About</a></li>
+          <li><a href="#analysis" data-i18n="nav.analysis">Analysis</a></li>
+          <li><a href="#contact" data-i18n="nav.contact">Contact</a></li>
         </ul>
       </div>
       <div class="footer-col">
-        <p class="footer-heading" data-i18n="footer.colLegal">Rechtliches</p>
+        <p class="footer-heading" data-i18n="footer.colLegal">Legal</p>
         <ul class="footer-links">
-          <li><a href="impressum.html" data-i18n="footer.linkImpressum">Impressum</a></li>
-          <li><a href="datenschutz.html" data-i18n="footer.linkPrivacy">Datenschutz</a></li>
-          <li><a href="agb.html" data-i18n="footer.linkAGB">AGB</a></li>
+          <li><a href="impressum.html" data-i18n="footer.linkLegal">Legal notice</a></li>
+          <li><a href="datenschutz.html" data-i18n="footer.linkPrivacy">Privacy policy</a></li>
+          <li><a href="agb.html" data-i18n="footer.linkTerms">Terms of service</a></li>
           <li><a href="cookies.html" data-i18n="footer.linkCookies">Cookies</a></li>
         </ul>
-        <p class="footer-mail"><a href="mailto:info@hairgent.de">info@hairgent.de</a></p>
+        <p class="footer-mail"><a href="mailto:info@auraclinicge.com">info@auraclinicge.com</a></p>
       </div>
     </div>
     <div class="container footer-bottom">
-      <p class="footer-copy"><span data-i18n="footer.rights">© Hairgent. Alle Rechte vorbehalten.</span></p>
+      <p class="footer-copy"><span data-i18n="footer.rights">© Aura Clinic. All rights reserved.</span></p>
     </div>
   </footer>
 
-  <aside class="fab-social" aria-label="Social Media">
-    <a class="fab-social-link" id="fab-instagram" href="https://www.instagram.com/" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+  <aside class="fab-social" aria-label="Social media">
+    <a class="fab-social-link" id="fab-instagram" href="https://www.instagram.com/auraclinicge/" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
       <svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
-    </a>
-    <a class="fab-social-link" id="fab-tiktok" href="https://www.tiktok.com/" target="_blank" rel="noopener noreferrer" aria-label="TikTok">
-      <svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-5.2 1.74 2.89 2.89 0 012.31-4.64 2.93 2.93 0 01.88.13V9.4a6.84 6.84 0 00-1-.05A6.33 6.33 0 005 20.1a6.34 6.34 0 0010.86-4.43v-7a8.16 8.16 0 004.77 1.52v-3.4a4.85 4.85 0 01-1-.1z"/></svg>
-    </a>
-    <a class="fab-social-link" id="fab-facebook" href="https://www.facebook.com/" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
-      <svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
     </a>
   </aside>
 
-  <a class="fab-whatsapp" id="fab-whatsapp" href="https://wa.me/491234567890" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp">
+  <a class="fab-whatsapp" id="fab-whatsapp" href="https://wa.me/995557168876" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp">
     <svg aria-hidden="true" width="28" height="28" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.435 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
   </a>
 
   <script src="js/site-config.js"></script>
+  <script src="js/i18n-data.js"></script>
   <script src="js/app.js" defer></script>
 </body>
 </html>
