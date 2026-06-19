@@ -15,8 +15,8 @@
     instagram: "https://www.instagram.com/auraclinicge/",
     mapsUrl:
       "https://www.google.com/maps/search/?api=1&query=129+Petre+Bagrationi+Str,+Batumi+6010,+Georgia",
-    /** AI preview API — Phase 2: /api/preview */
-    previewApiUrl: "",
+    /** AI preview API — Phase 2: set GEMINI_API_KEY on Vercel */
+    previewApiUrl: "/api/preview",
     leadSubmitUrl: FORCE_API_LEAD_NO_MAIL || onVercelHost ? "/api/lead" : "",
   };
 })();

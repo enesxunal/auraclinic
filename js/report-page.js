@@ -1,5 +1,5 @@
 /**
- * Aura Clinic — dedicated analysis result page
+ * Aura Clinic — analysis result page (report.html)
  */
 (function () {
   "use strict";
@@ -7,7 +7,7 @@
   var STORAGE_KEY = "aura_clinic_report_v1";
   var currentLang = "en";
   var reportPayload = null;
-  var previewObjectUrl = null;
+  var previewCtrl = null;
 
   var core = window.AURA_ANALYSIS;
   var I18N = window.AURA_I18N || { en: {} };
@@ -46,7 +46,7 @@
     });
     applyTranslations();
     renderReport();
-    refreshPreviewTechnique();
+    if (previewCtrl) previewCtrl.setLanguage(lang);
   }
 
   function renderReport() {
@@ -61,40 +61,8 @@
     if (idEl) idEl.textContent = proto.protocolId;
     if (body) core.renderReportCard(body, reportPayload.answers, proto, currentLang);
     reportPayload._proto = proto;
-    refreshPreviewTechnique();
-  }
-
-  function refreshPreviewTechnique() {
-    var el = document.getElementById("preview-technique-text");
-    if (!el || !reportPayload || !reportPayload._proto) return;
-    el.textContent = reportPayload._proto.technique + " · " + reportPayload._proto.grafts;
-  }
-
-  function initPhotoPreview() {
-    var input = document.getElementById("preview-photo-input");
-    var frame = document.getElementById("preview-frame");
-    var img = document.getElementById("preview-user-photo");
-    if (!input || !frame || !img) return;
-
-    var MAX_BYTES = 8 * 1024 * 1024;
-
-    input.addEventListener("change", function () {
-      var file = input.files && input.files[0];
-      if (!file) return;
-      if (file.size > MAX_BYTES) {
-        input.value = "";
-        window.alert(t("preview.errorSize"));
-        return;
-      }
-      if (previewObjectUrl) {
-        URL.revokeObjectURL(previewObjectUrl);
-        previewObjectUrl = null;
-      }
-      previewObjectUrl = URL.createObjectURL(file);
-      img.src = previewObjectUrl;
-      img.alt = t("preview.uploadLabel");
-      frame.hidden = false;
-    });
+    reportPayload.techniqueKey = proto.techniqueKey;
+    if (previewCtrl) previewCtrl.setTechnique(proto.techniqueKey);
   }
 
   function showMailNotice() {
@@ -121,7 +89,19 @@
     });
   });
 
+  var initialTech =
+    reportPayload.techniqueKey ||
+    (reportPayload._proto && reportPayload._proto.techniqueKey) ||
+    "individual";
+
+  previewCtrl = window.AURA_PREVIEW_UI.init({
+    lang: currentLang,
+    defaultTechnique: initialTech,
+    showRecommended: true,
+    answers: reportPayload.answers,
+    protocolId: reportPayload.protocolId || "",
+  });
+
   setLanguage(currentLang);
   showMailNotice();
-  initPhotoPreview();
 })();

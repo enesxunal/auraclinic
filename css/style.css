@@ -1430,11 +1430,199 @@ body.cookie-banner-visible .fab-social {
   }
 }
 
-/* Photo preview frame — Phase 2: AI-generated image replaces user photo slot */
-.photo-preview-gate {
-  margin-top: 2rem;
-  padding-top: 2rem;
-  border-top: 1px solid var(--color-border);
+.report-page-container {
+  max-width: 40rem;
+}
+
+.report-page-container--wide {
+  max-width: 36rem;
+}
+
+.preview-studio {
+  padding: 1.5rem 1.35rem 1.65rem;
+}
+
+.preview-technique-heading {
+  margin: 1.35rem 0 0.65rem;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+.technique-picker {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.5rem;
+  margin-bottom: 1.25rem;
+}
+
+@media (min-width: 480px) {
+  .technique-picker {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.technique-chip {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 3rem;
+  padding: 0.65rem 0.75rem;
+  border-radius: var(--radius);
+  border: 1px solid var(--color-border);
+  background: var(--color-bg-elevated);
+  color: var(--color-text-muted);
+  font-family: inherit;
+  font-size: 0.78rem;
+  font-weight: 600;
+  line-height: 1.35;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s, color 0.2s, box-shadow 0.2s;
+}
+
+.technique-chip:hover {
+  border-color: rgba(196, 204, 214, 0.45);
+  color: var(--color-text);
+}
+
+.technique-chip.is-selected {
+  border-color: rgba(212, 218, 227, 0.65);
+  background: linear-gradient(160deg, rgba(196, 204, 214, 0.14), rgba(30, 34, 40, 0.95));
+  color: #fff;
+  box-shadow: 0 0 0 1px rgba(212, 218, 227, 0.2), 0 8px 24px rgba(0, 0, 0, 0.25);
+}
+
+.preview-status {
+  margin: 1rem 0 0;
+  padding: 0.75rem 0.9rem;
+  font-size: 0.85rem;
+  font-weight: 500;
+  line-height: 1.5;
+  border-radius: var(--radius);
+}
+
+.preview-status--info {
+  background: rgba(196, 204, 214, 0.08);
+  border: 1px solid var(--color-border);
+  color: var(--color-text-muted);
+}
+
+.preview-status--error {
+  background: rgba(180, 80, 80, 0.12);
+  border: 1px solid rgba(180, 80, 80, 0.35);
+  color: #e8b4b4;
+}
+
+.btn.is-loading {
+  opacity: 0.75;
+  cursor: wait;
+}
+
+/* Silver branded preview frame */
+.preview-frame--silver {
+  position: relative;
+  max-width: 20rem;
+  margin: 1.5rem auto 0;
+  border-radius: 14px;
+  border: 1px solid rgba(212, 218, 227, 0.45);
+  background: linear-gradient(165deg, #4a5159 0%, #2a2f36 35%, #1a1d22 100%);
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.06),
+    0 20px 50px rgba(0, 0, 0, 0.45),
+    inset 0 1px 0 rgba(255, 255, 255, 0.12);
+  overflow: hidden;
+}
+
+.preview-frame-shine {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    125deg,
+    transparent 30%,
+    rgba(255, 255, 255, 0.07) 48%,
+    transparent 62%
+  );
+  pointer-events: none;
+  z-index: 2;
+}
+
+.preview-frame--silver .preview-frame-brand--top {
+  padding: 1rem 1rem 0.85rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.06), transparent);
+}
+
+.preview-frame--silver .preview-frame-photo-wrap {
+  position: relative;
+  aspect-ratio: 4 / 5;
+  background: #0a0c0e;
+}
+
+.preview-frame-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    transparent 55%,
+    rgba(0, 0, 0, 0.55) 100%
+  );
+  pointer-events: none;
+}
+
+.preview-frame--silver .preview-frame-caption {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin: 0;
+  padding: 0.75rem;
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-align: center;
+  color: #fff;
+  z-index: 1;
+}
+
+.preview-frame--silver .preview-frame-brand--bottom {
+  padding: 0.85rem 1rem 1rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  background: linear-gradient(0deg, rgba(0, 0, 0, 0.2), transparent);
+  text-align: center;
+}
+
+.preview-frame-brandline {
+  margin: 0 0 0.35rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #fff;
+}
+
+.preview-frame--silver .preview-frame-technique {
+  margin: 0;
+  font-size: 0.75rem;
+  font-weight: 500;
+  line-height: 1.45;
+  color: rgba(255, 255, 255, 0.82);
+}
+
+.preview-frame.is-generating .preview-frame-photo {
+  opacity: 0.45;
+  filter: blur(1px);
+}
+
+.preview-frame.is-generating::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  background: rgba(10, 12, 14, 0.35);
+  pointer-events: none;
 }
 
 .photo-preview-title {
@@ -1465,40 +1653,12 @@ body.cookie-banner-visible .fab-social {
   color: var(--color-text-muted);
 }
 
-.preview-frame {
-  max-width: 22rem;
-  margin: 1.25rem auto 1rem;
-  border-radius: var(--radius);
-  border: 1px solid rgba(196, 204, 214, 0.35);
-  background: linear-gradient(180deg, #1a1d22 0%, #121416 100%);
-  box-shadow: var(--shadow);
-  overflow: hidden;
-}
-
-.preview-frame-brand {
-  padding: 0.85rem 1rem;
-  text-align: center;
-  background: rgba(196, 204, 214, 0.06);
-  border-bottom: 1px solid var(--color-border);
-}
-
-.preview-frame-brand--bottom {
-  border-bottom: none;
-  border-top: 1px solid var(--color-border);
-}
-
 .preview-frame-logo {
-  height: 2rem;
+  height: 2.1rem;
   width: auto;
   margin-inline: auto;
   filter: brightness(0) invert(1);
-  opacity: 0.92;
-}
-
-.preview-frame-photo-wrap {
-  position: relative;
-  aspect-ratio: 4 / 5;
-  background: #0a0c0e;
+  opacity: 0.95;
 }
 
 .preview-frame-photo {
@@ -1509,30 +1669,8 @@ body.cookie-banner-visible .fab-social {
   display: block;
 }
 
-.preview-frame-caption {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  margin: 0;
-  padding: 0.65rem 0.75rem;
-  font-size: 0.72rem;
-  font-weight: 600;
-  text-align: center;
-  color: #eceff4;
-  background: linear-gradient(transparent, rgba(0, 0, 0, 0.75));
-}
-
-.preview-frame-technique {
-  margin: 0;
-  font-size: 0.78rem;
-  font-weight: 600;
-  color: var(--color-text-muted);
-  line-height: 1.45;
-}
-
 .preview-disclaimer {
-  margin: 1rem 0 0;
+  margin: 1.25rem 0 0;
   padding: 0.75rem 0.9rem;
   font-size: 0.78rem;
   font-weight: 500;
