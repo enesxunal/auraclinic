@@ -3,13 +3,16 @@
  *
  * Env: SMTP_USER, SMTP_PASS, SMTP_HOST, SMTP_PORT, MAIL_TO, MAIL_FROM,
  *      META_PIXEL_ID, META_CAPI_TOKEN, ALLOWED_ORIGINS,
- *      UPSTASH_REDIS_REST_URL, UPSTASH_REDIS_REST_TOKEN (optional)
+ *      UPSTASH_REDIS_REST_URL, UPSTASH_REDIS_REST_TOKEN (optional),
+ *      N8N_LEAD_WEBHOOK_URL, N8N_LEAD_WEBHOOK_SECRET,
+ *      N8N_LEAD_WEBHOOK_TIMEOUT_MS (optional)
  */
 var nodemailer = require("nodemailer");
 var metaCapi = require("../lib/meta-capi");
 var mailTemplates = require("../lib/mail-templates");
 var rateLimit = require("../lib/rate-limit");
 var leadValidate = require("../lib/lead-validate");
+var n8nLead = require("../lib/n8n-lead");
 
 var MAX_BODY_BYTES = 100 * 1024;
 var recentLeads = Object.create(null);
@@ -191,6 +194,7 @@ module.exports = async function handler(req, res) {
   }
 
   if (isDuplicate(data)) {
+    // Skip email, Meta, and n8n — prevents duplicate CRM records on browser retries
     safeLog("duplicate", data);
     res.status(200).json({ ok: true, duplicate: true });
     return;
@@ -235,6 +239,22 @@ module.exports = async function handler(req, res) {
       });
     }
 
+    // n8n only after successful clinic/customer mail — never block the user response
+    var n8nSync = false;
+    if (n8nLead.isConfigured()) {
+      try {
+        var n8nResult = await n8nLead.sendLeadToN8n(data);
+        n8nSync = !!(n8nResult && n8nResult.sync);
+      } catch (n8nErr) {
+        safeLog("n8n_failed", {
+          lead_id: data.lead_id,
+          service: data.service,
+          lang: data.lang,
+        });
+        n8nSync = false;
+      }
+    }
+
     try {
       await metaCapi.sendLeadEvents(data, req);
     } catch (metaErr) {
@@ -242,11 +262,16 @@ module.exports = async function handler(req, res) {
     }
 
     safeLog("ok", data);
-    res.status(200).json({
+    var responseBody = {
       ok: true,
       lead_id: data.lead_id,
       customerMail: !!(customerMail && data.email),
-    });
+    };
+    // Safe status only when integration is configured (frontend ignores unknown fields)
+    if (n8nLead.isConfigured()) {
+      responseBody.n8n_sync = n8nSync;
+    }
+    res.status(200).json(responseBody);
   } catch (err) {
     safeLog("mail_failed", data);
     res.status(500).json({ ok: false, error: "mail_failed" });

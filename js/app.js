@@ -436,7 +436,8 @@
           return;
         }
 
-        // Success — fire conversions once
+        // Success — fire conversions once (skip duplicate retries)
+        if (!(result.data && result.data.duplicate)) {
         if (window.AURA_ANALYTICS && window.AURA_ANALYTICS.trackLeadConversion) {
           window.AURA_ANALYTICS.trackLeadConversion({
             leadEventId: leadEventId,
@@ -459,6 +460,7 @@
           if (window.AURA_GOOGLE && window.AURA_GOOGLE.trackLead) {
             window.AURA_GOOGLE.trackLead();
           }
+        }
         }
 
         var reportPayload = {

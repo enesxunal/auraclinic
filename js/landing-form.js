@@ -156,6 +156,8 @@
           }
           form.hidden = true;
           showEl(successEl, t("success"));
+          // Duplicate retries must not fire a second conversion
+          if (res.data && res.data.duplicate) return;
           if (window.AURA_ANALYTICS && window.AURA_ANALYTICS.trackLeadConversion) {
             window.AURA_ANALYTICS.trackLeadConversion({
               pageType: document.body.getAttribute("data-page-type") || "landing",
