@@ -28,25 +28,14 @@
     }
   }
 
-  function applyTranslations() {
-    document.documentElement.lang = currentLang;
-    document.querySelectorAll("[data-i18n]").forEach(function (el) {
-      var key = el.getAttribute("data-i18n");
-      if (key) el.textContent = t(key);
-    });
-  }
-
-  function setLanguage(lang) {
-    if (!I18N[lang]) return;
-    currentLang = lang;
-    document.querySelectorAll(".lang-btn").forEach(function (btn) {
-      var isSel = btn.getAttribute("data-lang") === lang;
-      btn.classList.toggle("is-active", isSel);
-      btn.setAttribute("aria-pressed", isSel ? "true" : "false");
-    });
-    applyTranslations();
-    renderReport();
-    if (previewCtrl) previewCtrl.setLanguage(lang);
+  function bindConsultationLink() {
+    var btn = document.getElementById("book-consultation-btn");
+    if (!btn) return;
+    var proto = (reportPayload && reportPayload.protocolId) || "";
+    btn.setAttribute("data-protocol-id", proto);
+    if (window.AURA_WHATSAPP && window.AURA_WHATSAPP.bindConsultationLinks) {
+      window.AURA_WHATSAPP.bindConsultationLinks(currentLang);
+    }
   }
 
   function renderReport() {
@@ -73,21 +62,22 @@
     el.hidden = false;
   }
 
+  function onLangChange(lang) {
+    currentLang = lang;
+    renderReport();
+    if (previewCtrl && previewCtrl.setLanguage) previewCtrl.setLanguage(lang);
+    showMailNotice();
+    bindConsultationLink();
+  }
+
   reportPayload = loadPayload();
   if (!reportPayload || !reportPayload.answers) {
     window.location.replace("index.html#analysis");
     return;
   }
 
-  currentLang = reportPayload.lang || "en";
-  if (!I18N[currentLang]) currentLang = "en";
-
-  document.querySelectorAll(".lang-btn").forEach(function (btn) {
-    btn.addEventListener("click", function () {
-      var lang = btn.getAttribute("data-lang");
-      if (lang) setLanguage(lang);
-    });
-  });
+  var startLang = reportPayload.lang || "en";
+  if (!I18N[startLang]) startLang = "en";
 
   var initialTech =
     reportPayload.techniqueKey ||
@@ -95,13 +85,25 @@
     "individual";
 
   previewCtrl = window.AURA_PREVIEW_UI.init({
-    lang: currentLang,
+    lang: startLang,
     defaultTechnique: initialTech,
     showRecommended: true,
     answers: reportPayload.answers,
     protocolId: reportPayload.protocolId || "",
   });
 
-  setLanguage(currentLang);
+  currentLang = startLang;
+
+  if (window.AURA_CHROME) {
+    window.AURA_CHROME.init({
+      initialLang: startLang,
+      metaPageName: "Analysis Report",
+      langCallbacks: [onLangChange],
+    });
+    currentLang = window.AURA_CHROME.getLang();
+  }
+
+  renderReport();
   showMailNotice();
+  bindConsultationLink();
 })();

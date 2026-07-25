@@ -1,5 +1,5 @@
 /**
- * Aura Clinic — homepage: stepper, lead form → report.html
+ * Aura Clinic — homepage: stepper, lead form → report.html (only after API success)
  */
 (function () {
   "use strict";
@@ -7,8 +7,9 @@
   var STORAGE_KEY = "aura_clinic_report_v1";
   var I18N = window.AURA_I18N || { en: {} };
   var core = window.AURA_ANALYSIS;
-
   var currentLang = "en";
+  var formStartedAt = new Date().toISOString();
+  var submitting = false;
 
   function t(key) {
     if (core && core.t) return core.t(key, currentLang);
@@ -48,9 +49,27 @@
     document.getElementById("field-recovery").value = proto.recovery;
   }
 
+  function updateServiceLinks() {
+    var cfg = window.AURA_CLINIC_SITE || {};
+    var hair = cfg.hairLandingByLang && cfg.hairLandingByLang[currentLang];
+    var botox = cfg.botoxLandingByLang && cfg.botoxLandingByLang[currentLang];
+    document.querySelectorAll("[data-service-link='hair']").forEach(function (el) {
+      if (hair) el.href = hair.replace(/^\//, "");
+    });
+    document.querySelectorAll("[data-service-link='botox']").forEach(function (el) {
+      if (botox) el.href = botox.replace(/^\//, "");
+    });
+  }
+
   function setLanguage(lang) {
     if (!I18N[lang]) return;
     currentLang = lang;
+    try {
+      localStorage.setItem(
+        (window.AURA_CHROME && window.AURA_CHROME.LANG_KEY) || "aura_clinic_lang_v1",
+        lang
+      );
+    } catch (e) {}
     document.querySelectorAll(".lang-btn").forEach(function (btn) {
       var isSel = btn.getAttribute("data-lang") === lang;
       btn.classList.toggle("is-active", isSel);
@@ -59,6 +78,15 @@
     applyTranslations();
     refreshLeadHiddenFields();
     syncNavToggleAria();
+    updateServiceLinks();
+    if (window.AURA_WHATSAPP && window.AURA_WHATSAPP.bindAll) {
+      window.AURA_WHATSAPP.bindAll(lang);
+    } else if (window.AURA_WHATSAPP && window.AURA_WHATSAPP.bindConsultationLinks) {
+      window.AURA_WHATSAPP.bindConsultationLinks(lang);
+    }
+    if (window.AURA_ATTRIBUTION) {
+      window.AURA_ATTRIBUTION.capture({ language: lang, service: "hair_analysis" });
+    }
   }
 
   function syncNavToggleAria() {
@@ -98,8 +126,6 @@
         closeMainNav();
         if (window.history && window.history.replaceState) {
           window.history.replaceState(null, "", href);
-        } else {
-          window.location.hash = href;
         }
         var motion = window.matchMedia("(prefers-reduced-motion: reduce)").matches
           ? "auto"
@@ -168,6 +194,15 @@
     var btnNext = document.getElementById("btn-next");
     if (btnPrev) btnPrev.disabled = n === 1;
     if (btnNext) btnNext.textContent = n < 5 ? t("analysis.next") : t("analysis.finish");
+    if (window.AURA_ANALYTICS) {
+      window.AURA_ANALYTICS.track("hair_analysis_step_complete", {
+        page_type: "homepage",
+        service_category: "hair_transplant",
+        language: currentLang,
+        form_name: "hair_analysis",
+        step_number: n,
+      });
+    }
   }
 
   function getFieldName(step) {
@@ -193,30 +228,11 @@
     };
   }
 
-  function getLeadSubmitUrl(form) {
-    var siteCfg = window.AURA_CLINIC_SITE || {};
-    if (siteCfg.leadSubmitUrl && String(siteCfg.leadSubmitUrl).length > 0) {
-      return siteCfg.leadSubmitUrl;
-    }
-    return form.getAttribute("action") || form.action || "send-mail.php";
-  }
-
-  function trySendLead(fd, submitUrl) {
-    return fetch(submitUrl, {
-      method: "POST",
-      body: fd,
-      headers: { Accept: "application/json" },
-    })
-      .then(function (res) {
-        return res.json().catch(function () {
-          return { ok: false };
-        }).then(function (data) {
-          return !!(res.ok && data.ok);
-        });
-      })
-      .catch(function () {
-        return false;
-      });
+  function showFormError(msg) {
+    var errorEl = document.getElementById("form-error");
+    if (!errorEl) return;
+    errorEl.textContent = msg;
+    errorEl.hidden = false;
   }
 
   function initStepper() {
@@ -227,6 +243,20 @@
     btnNext.addEventListener("click", function () {
       if (!currentStepHasValue()) return;
       var step = getCurrentStep();
+      if (step === 1) {
+        if (window.AURA_ANALYTICS) {
+          window.AURA_ANALYTICS.track("start_hair_analysis", {
+            page_type: "homepage",
+            service_category: "hair_transplant",
+            language: currentLang,
+            form_name: "hair_analysis",
+            step_number: 1,
+          });
+        }
+        if (window.AURA_META && window.AURA_META.trackCustom) {
+          window.AURA_META.trackCustom("AnalysisStart", { step: 1 });
+        }
+      }
       if (step < 5) {
         setStep(step + 1);
         return;
@@ -250,6 +280,17 @@
         lead.hidden = false;
         lead.scrollIntoView({ behavior: "smooth", block: "start" });
       }
+      if (window.AURA_ANALYTICS) {
+        window.AURA_ANALYTICS.track("view_lead_form", {
+          page_type: "homepage",
+          service_category: "hair_transplant",
+          language: currentLang,
+          form_name: "hair_analysis",
+        });
+      }
+      if (window.AURA_META && window.AURA_META.trackCustom) {
+        window.AURA_META.trackCustom("AnalysisComplete", { step: 5 });
+      }
     });
 
     btnPrev.addEventListener("click", function () {
@@ -264,17 +305,59 @@
     var form = document.getElementById("lead-form");
     var errorEl = document.getElementById("form-error");
     var submitBtn = form && form.querySelector('button[type="submit"]');
-    if (!form || !core) return;
+    if (!form || !core || !window.AURA_FORMS) return;
+
+    var started = document.getElementById("field-form-started");
+    if (started) started.value = formStartedAt;
 
     form.addEventListener("submit", function (e) {
       e.preventDefault();
+      if (submitting) return;
       if (errorEl) errorEl.hidden = true;
 
       var answers = readAnswers();
       if (!answers.gender || !answers.age || !answers.area || !answers.severity || !answers.goal) {
-        if (errorEl) {
-          errorEl.textContent = t("lead.errorIncomplete");
-          errorEl.hidden = false;
+        showFormError(t("lead.errorIncomplete"));
+        return;
+      }
+
+      var name = (document.getElementById("lead-name") || {}).value || "";
+      var email = (document.getElementById("lead-email") || {}).value || "";
+      var phone = (document.getElementById("lead-phone") || {}).value || "";
+      var consentEl = document.getElementById("lead-consent");
+      var marketingEl = document.getElementById("lead-marketing");
+      var honeypot = (document.getElementById("lead-website") || {}).value || "";
+
+      var validated = window.AURA_FORMS.validateLead(
+        {
+          name: name,
+          email: email,
+          phone: phone,
+          lang: currentLang,
+          service: "hair_analysis",
+          consent: consentEl ? consentEl.checked : false,
+          marketing_consent: marketingEl ? marketingEl.checked : false,
+        },
+        { requirePhone: true, requireEmail: true, requireConsent: true }
+      );
+
+      if (!validated.ok) {
+        var err = validated.errors[0];
+        var map = {
+          name: "lead.errorName",
+          phone: "lead.errorPhone",
+          email: "lead.errorEmail",
+          consent: "lead.errorConsent",
+        };
+        showFormError(t(map[err] || "lead.errorGeneric"));
+        if (window.AURA_ANALYTICS) {
+          window.AURA_ANALYTICS.track("lead_form_error", {
+            page_type: "homepage",
+            service_category: "hair_transplant",
+            language: currentLang,
+            form_name: "hair_analysis",
+            error_type: err || "validation",
+          });
         }
         return;
       }
@@ -282,7 +365,6 @@
       var idField = document.getElementById("field-protocol-id");
       var fixedId = idField && idField.value ? idField.value : null;
       var proto = core.buildProtocol(answers, fixedId, currentLang);
-
       if (idField) idField.value = proto.protocolId;
       document.getElementById("field-recommendation").value = core.buildFullReportPlain(
         answers,
@@ -293,53 +375,239 @@
       document.getElementById("field-recovery").value = proto.recovery;
       document.getElementById("field-answers-json").value = JSON.stringify(answers);
 
+      submitting = true;
       if (submitBtn) {
         submitBtn.disabled = true;
         submitBtn.textContent = t("lead.sending");
       }
 
-      var fd = new FormData(form);
-      var submitUrl = getLeadSubmitUrl(form);
-      var payload = {
-        lang: currentLang,
-        answers: answers,
-        protocolId: proto.protocolId,
-        techniqueKey: proto.techniqueKey,
-        name: String(fd.get("name") || ""),
-        email: String(fd.get("email") || ""),
-        phone: String(fd.get("phone") || ""),
-        submittedAt: new Date().toISOString(),
-        mailSent: false,
-      };
+      if (window.AURA_ANALYTICS) {
+        window.AURA_ANALYTICS.track("submit_lead_form", {
+          page_type: "homepage",
+          service_category: "hair_transplant",
+          language: currentLang,
+          form_name: "hair_analysis",
+        });
+      }
 
-      var mailRace = Promise.race([
-        trySendLead(fd, submitUrl),
-        new Promise(function (resolve) {
-          window.setTimeout(function () {
-            resolve(false);
-          }, 5000);
-        }),
-      ]);
+      // Prepare conversion event IDs but fire ONLY after API success
+      var meta = window.AURA_META || {};
+      var leadEventId = meta.makeEventId ? meta.makeEventId("lead") : "";
+      var regEventId = meta.makeEventId ? meta.makeEventId("reg") : "";
 
-      mailRace.then(function (ok) {
-        payload.mailSent = ok;
-        try {
-          sessionStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
-        } catch (err) {
+      var payload = window.AURA_FORMS.buildPayload(
+        {
+          name: validated.normalized.name,
+          email: validated.normalized.email,
+          phone: validated.normalized.phone,
+          lang: currentLang,
+          service: "hair_analysis",
+          protocol_id: proto.protocolId,
+          recommendation: core.buildFullReportPlain(answers, proto, currentLang),
+          graft_range: proto.grafts,
+          recovery: proto.recovery,
+          answers_json: JSON.stringify(answers),
+          consent: true,
+          marketing_consent: validated.normalized.marketing_consent,
+          form_started_at: formStartedAt,
+          honeypot: honeypot,
+          website: honeypot,
+        },
+        { leadEventId: leadEventId, regEventId: regEventId }
+      );
+
+      window.AURA_FORMS.submitLead(payload, { timeoutMs: 20000 }).then(function (result) {
+        if (!result.ok) {
+          submitting = false;
           if (submitBtn) {
             submitBtn.disabled = false;
             submitBtn.textContent = t("lead.submit");
           }
-          if (errorEl) {
-            errorEl.textContent = t("lead.errorStorage");
-            errorEl.hidden = false;
+          showFormError(t("lead.errorGeneric") + " — " + t("lead.retry"));
+          if (window.AURA_ANALYTICS) {
+            window.AURA_ANALYTICS.track("lead_form_error", {
+              page_type: "homepage",
+              service_category: "hair_transplant",
+              language: currentLang,
+              form_name: "hair_analysis",
+              error_type: (result.data && result.data.error) || "api_error",
+            });
           }
+          return;
+        }
+
+        // Success — fire conversions once
+        if (window.AURA_ANALYTICS && window.AURA_ANALYTICS.trackLeadConversion) {
+          window.AURA_ANALYTICS.trackLeadConversion({
+            leadEventId: leadEventId,
+            regEventId: regEventId,
+            contentName: "Hair Analysis Form",
+            pageType: "homepage",
+            service: "hair_transplant",
+            language: currentLang,
+            formName: "hair_analysis",
+          });
+        } else {
+          if (meta.track) {
+            meta.track("Lead", { content_name: "Hair Analysis Form" }, { eventId: leadEventId });
+            meta.track(
+              "CompleteRegistration",
+              { content_name: "Hair Analysis Form" },
+              { eventId: regEventId }
+            );
+          }
+          if (window.AURA_GOOGLE && window.AURA_GOOGLE.trackLead) {
+            window.AURA_GOOGLE.trackLead();
+          }
+        }
+
+        var reportPayload = {
+          lang: currentLang,
+          answers: answers,
+          protocolId: proto.protocolId,
+          techniqueKey: proto.techniqueKey,
+          name: validated.normalized.name,
+          email: validated.normalized.email,
+          phone: validated.normalized.phone,
+          submittedAt: new Date().toISOString(),
+          mailSent: true,
+          leadId: payload.lead_id,
+        };
+
+        try {
+          sessionStorage.setItem(STORAGE_KEY, JSON.stringify(reportPayload));
+        } catch (err) {
+          submitting = false;
+          if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.textContent = t("lead.submit");
+          }
+          showFormError(t("lead.errorStorage"));
           return;
         }
         window.location.href = "report.html";
       });
     });
   }
+
+  function initCookieBanner() {
+    var KEY = "aura_clinic_cookie_consent_v1";
+    var PREFS = "aura_clinic_cookie_prefs_v1";
+    var bar = document.getElementById("cookie-banner");
+    var btn = document.getElementById("cookie-accept");
+    var reject = document.getElementById("cookie-reject");
+    var manage = document.getElementById("cookie-manage");
+    var save = document.getElementById("cookie-save");
+    var panel = document.getElementById("cookie-prefs-panel");
+    var analyticsCb = document.getElementById("cookie-pref-analytics");
+    if (!bar) return;
+
+    function hideBar() {
+      bar.hidden = true;
+      document.body.classList.remove("cookie-banner-visible");
+      if (panel) panel.hidden = true;
+    }
+
+    function hasDecision() {
+      try {
+        return localStorage.getItem(PREFS) || localStorage.getItem(KEY);
+      } catch (e) {
+        return null;
+      }
+    }
+
+    if (hasDecision()) hideBar();
+    else {
+      bar.hidden = false;
+      document.body.classList.add("cookie-banner-visible");
+    }
+
+    function savePrefs(prefs) {
+      try {
+        localStorage.setItem(PREFS, JSON.stringify(prefs));
+        localStorage.setItem(KEY, prefs.analytics || prefs.marketing ? "1" : "0");
+      } catch (e) {}
+    }
+
+    if (btn) {
+      btn.addEventListener("click", function () {
+        savePrefs({ necessary: true, analytics: true, marketing: true });
+        hideBar();
+        if (window.AURA_META && window.AURA_META.onConsentAccepted) {
+          window.AURA_META.onConsentAccepted();
+          window.AURA_META.viewContent("Homepage");
+        }
+        if (window.AURA_GOOGLE && window.AURA_GOOGLE.onConsentAccepted) {
+          window.AURA_GOOGLE.onConsentAccepted();
+        }
+      });
+    }
+    if (reject) {
+      reject.addEventListener("click", function () {
+        savePrefs({ necessary: true, analytics: false, marketing: false });
+        hideBar();
+        if (window.AURA_GOOGLE && window.AURA_GOOGLE.onConsentRejected) {
+          window.AURA_GOOGLE.onConsentRejected();
+        }
+      });
+    }
+    if (manage && panel) {
+      manage.addEventListener("click", function () {
+        panel.hidden = !panel.hidden;
+      });
+    }
+    if (save) {
+      save.addEventListener("click", function () {
+        var on = analyticsCb ? !!analyticsCb.checked : false;
+        savePrefs({ necessary: true, analytics: on, marketing: on });
+        hideBar();
+        if (on) {
+          if (window.AURA_META && window.AURA_META.onConsentAccepted) {
+            window.AURA_META.onConsentAccepted();
+          }
+          if (window.AURA_GOOGLE && window.AURA_GOOGLE.onConsentAccepted) {
+            window.AURA_GOOGLE.onConsentAccepted();
+          }
+        } else if (window.AURA_GOOGLE && window.AURA_GOOGLE.onConsentRejected) {
+          window.AURA_GOOGLE.onConsentRejected();
+        }
+      });
+    }
+  }
+
+  function initSiteFloatingLinks() {
+    if (window.AURA_WHATSAPP && window.AURA_WHATSAPP.bindAll) {
+      window.AURA_WHATSAPP.bindAll(currentLang);
+    }
+    var ig = document.getElementById("fab-instagram");
+    var cfg = window.AURA_CLINIC_SITE || {};
+    if (ig && cfg.instagram) ig.href = cfg.instagram;
+  }
+
+  function initMeta() {
+    if (window.AURA_ATTRIBUTION) {
+      window.AURA_ATTRIBUTION.capture({ language: currentLang, service: "hair_analysis" });
+    }
+    if (window.AURA_GOOGLE && window.AURA_GOOGLE.initOnLoad) {
+      window.AURA_GOOGLE.initOnLoad();
+    }
+    if (window.AURA_META && window.AURA_META.initOnLoad) {
+      window.AURA_META.initOnLoad("Homepage");
+    }
+    if (window.AURA_ANALYTICS && window.AURA_ANALYTICS.init) {
+      window.AURA_ANALYTICS.init({
+        pageType: "homepage",
+        service: "hair_analysis",
+        language: currentLang,
+      });
+    }
+  }
+
+  var savedLang = "en";
+  try {
+    savedLang = localStorage.getItem("aura_clinic_lang_v1") || "en";
+  } catch (e) {}
+  if (!I18N[savedLang]) savedLang = "en";
 
   document.querySelectorAll(".lang-btn").forEach(function (btn) {
     btn.addEventListener("click", function () {
@@ -348,38 +616,7 @@
     });
   });
 
-  function initSiteFloatingLinks() {
-    var cfg = window.AURA_CLINIC_SITE || {};
-    var wa = document.getElementById("fab-whatsapp");
-    if (wa && cfg.whatsappE164) {
-      wa.href =
-        "https://wa.me/" + String(cfg.whatsappE164).replace(/^\+/, "").replace(/\s/g, "");
-    }
-    var ig = document.getElementById("fab-instagram");
-    if (ig && cfg.instagram) ig.href = cfg.instagram;
-  }
-
-  function initCookieBanner() {
-    var KEY = "aura_clinic_cookie_consent_v1";
-    var bar = document.getElementById("cookie-banner");
-    var btn = document.getElementById("cookie-accept");
-    if (!bar || !btn) return;
-    function hideBar() {
-      bar.hidden = true;
-      document.body.classList.remove("cookie-banner-visible");
-    }
-    if (localStorage.getItem(KEY)) hideBar();
-    else {
-      bar.hidden = false;
-      document.body.classList.add("cookie-banner-visible");
-    }
-    btn.addEventListener("click", function () {
-      localStorage.setItem(KEY, "1");
-      hideBar();
-    });
-  }
-
-  setLanguage("en");
+  setLanguage(savedLang);
   if (window.location.hash === "#analysis") {
     try {
       sessionStorage.removeItem(STORAGE_KEY);
@@ -387,6 +624,7 @@
   }
   initSiteFloatingLinks();
   initCookieBanner();
+  initMeta();
   initSmoothScroll();
   initMobileNav();
   initStepper();

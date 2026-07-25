@@ -2,8 +2,24 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
+  <!-- Google tag (gtag.js) — Consent Mode: ölçüm çerez onayından sonra başlar -->
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag("consent", "default", {
+      ad_storage: "denied",
+      ad_user_data: "denied",
+      ad_personalization: "denied",
+      analytics_storage: "denied",
+      wait_for_update: 500
+    });
+  </script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=AW-18301236806"></script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Privacy Policy — Aura Clinic</title>
+  <title>Privacy Policy — Aura Clinic Batumi</title>
+  <meta name="description" content="Privacy policy for Aura Clinic Batumi — how we process contact form, hair analysis and website data." />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://auraclinicge.com/datenschutz.html" />
   <link rel="icon" type="image/svg+xml" href="aura-fav.svg" />
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/style.css" />
@@ -27,9 +43,7 @@
     <a href="index.html" class="legal-back">← Back to home</a>
     <h1>Privacy Policy</h1>
 
-    <p class="legal-placeholder">
-      <strong>Note:</strong> This policy describes how Aura Clinic handles personal data on auraclinicge.com. It is based on Georgia’s Law on Personal Data Protection and general best practice. Update with your DPO or legal counsel if required.
-    </p>
+    <!-- LEGAL_REVIEW_REQUIRED: Full legal review with counsel / DPO for Georgia Personal Data Protection Law -->
 
     <h2>1. Controller</h2>
     <p>
@@ -41,7 +55,10 @@
 
     <h2>2. What data we collect</h2>
     <ul>
-      <li><strong>Contact &amp; analysis form:</strong> name, email, phone, language preference, and your hair-analysis answers (gender, age, target area, severity, goal) plus generated protocol text.</li>
+      <li><strong>Contact &amp; analysis forms:</strong> name, email, phone, language preference, service interest, and (for hair analysis) questionnaire answers plus generated protocol text.</li>
+      <li><strong>Advertising attribution:</strong> UTM parameters and click IDs (for example gclid, fbclid) stored in first-party browser storage to understand campaign performance. <!-- LEGAL_REVIEW_REQUIRED --></li>
+      <li><strong>Analytics (with consent):</strong> Meta Pixel and Google Ads / optional GA4 events. <!-- LEGAL_REVIEW_REQUIRED --></li>
+      <li><strong>AI hair preview:</strong> photos you upload may be transmitted to Google Gemini (or related Google AI APIs) to generate an illustrative image. Photos are processed for the request and are not intended as a medical record. <!-- LEGAL_REVIEW_REQUIRED: retention & processor terms --></li>
       <li><strong>Technical data:</strong> IP address, browser type, device information, and access time — typically in server logs.</li>
       <li><strong>Cookies:</strong> see our <a href="cookies.html">cookie policy</a>.</li>
     </ul>
@@ -49,32 +66,38 @@
     <h2>3. Purposes and legal bases</h2>
     <p>We process data to:</p>
     <ul>
-      <li>respond to enquiries and send your analysis report;</li>
+      <li>respond to enquiries and send analysis or confirmation emails;</li>
       <li>schedule consultations and provide our services;</li>
+      <li>measure advertising performance when you consent to analytics;</li>
       <li>operate and secure the website;</li>
       <li>comply with legal obligations in Georgia.</li>
     </ul>
-    <p>Processing is based on your consent (forms), contract performance, legitimate interests (website security), or legal duty where applicable.</p>
+    <p><!-- LEGAL_REVIEW_REQUIRED --> Processing may be based on your consent (forms, cookies, marketing), contract performance, legitimate interests (website security), or legal duty where applicable.</p>
 
-    <h2>4. Storage duration</h2>
-    <p>
-      Enquiry data is kept only as long as needed to handle your request and any follow-up care, unless longer retention is required by law. Server logs are rotated regularly.
+    <h2>4. Marketing consent</h2>
+    <p><!-- LEGAL_REVIEW_REQUIRED --> Optional marketing messages are separate from the consent required to process a consultation request. You may withdraw marketing consent at any time by contacting info@auraclinicge.com.</p>
+
+    <h2>5. Storage duration</h2>
+    <p><!-- LEGAL_REVIEW_REQUIRED: exact retention schedules -->
+      Enquiry data is kept only as long as needed to handle your request and any follow-up care, unless longer retention is required by law. Attribution identifiers in the browser are kept for a limited period (about 90 days). Server logs are rotated regularly.
     </p>
 
-    <h2>5. Recipients</h2>
-    <p>
-      Data may be processed by hosting and email providers acting on our instructions. We do not sell personal data. Transfers outside Georgia occur only with appropriate safeguards if required.
+    <h2>6. Recipients &amp; international transfers</h2>
+    <p><!-- LEGAL_REVIEW_REQUIRED -->
+      Data may be processed by hosting (e.g. Vercel), email (SMTP provider), Meta (Pixel / Conversions API), Google (Ads, optional Analytics, Gemini for AI preview) acting as processors or independent controllers according to their terms. We do not sell personal data.
     </p>
 
-    <h2>6. Your rights</h2>
-    <p>Under Georgian data-protection law you may have the right to access, rectify, erase, restrict, or object to processing, and to withdraw consent. Contact us at info@auraclinicge.com. You may also lodge a complaint with the Personal Data Protection Service of Georgia.</p>
+    <h2>7. Your rights &amp; deletion requests</h2>
+    <p><!-- LEGAL_REVIEW_REQUIRED -->
+      Under Georgian data-protection law you may have the right to access, rectify, erase, restrict, or object to processing, and to withdraw consent. To request deletion or a copy of your data, email info@auraclinicge.com. You may also lodge a complaint with the Personal Data Protection Service of Georgia.
+    </p>
 
-    <h2>7. Security</h2>
-    <p>We use appropriate technical and organisational measures (HTTPS where available, access controls, limited retention) to protect your data.</p>
+    <h2>8. Security</h2>
+    <p>We use appropriate technical and organisational measures (HTTPS, access controls, limited retention, input validation) to protect your data.</p>
 
-    <h2>8. Changes</h2>
+    <h2>9. Changes</h2>
     <p>We may update this policy. The current version is always published on this page.</p>
-    <p><em>Last updated: June 2026</em></p>
+    <p><em>Last updated: July 2026</em></p>
   </main>
 
   <footer class="site-footer">

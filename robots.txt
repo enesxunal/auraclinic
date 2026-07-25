@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+
+Disallow: /report.html
+Disallow: /api/
+
+Sitemap: https://auraclinicge.com/sitemap.xml

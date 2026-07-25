@@ -1,0 +1,15 @@
+{
+  "functions": {
+    "api/preview.js": {
+      "maxDuration": 60
+    }
+  },
+  "redirects": [
+    {
+      "source": "/:path*",
+      "has": [{ "type": "host", "value": "www.auraclinicge.com" }],
+      "destination": "https://auraclinicge.com/:path*",
+      "permanent": true
+    }
+  ]
+}
