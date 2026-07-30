@@ -73,23 +73,15 @@ window.AURA_ANALYTICS = (function () {
 
       if (!hasMarketingConsent()) return;
 
+      // Meta Pixel standard events for Lead/Contact are owned by
+      // trackLeadConversion / AURA_META.bindContactTracking — do not re-fire here.
       if (window.AURA_META && window.AURA_META.trackCustom) {
         var metaMap = {
-          lead_form_success: "Lead",
-          appointment_form_success: "Lead",
-          click_whatsapp: "Contact",
-          click_phone: "Contact",
           preview_generate_success: "PreviewGenerate",
           view_hair_transplant_page: "ViewContent",
           view_botox_filler_page: "ViewContent",
         };
-        if (metaMap[eventName] === "Lead" && window.AURA_META.track) {
-          // Lead is handled explicitly with event_id on form success — skip here
-        } else if (metaMap[eventName] === "Contact" && window.AURA_META.contact) {
-          window.AURA_META.contact(
-            eventName === "click_phone" ? "Phone" : "WhatsApp"
-          );
-        } else if (metaMap[eventName] === "ViewContent" && window.AURA_META.viewContent) {
+        if (metaMap[eventName] === "ViewContent" && window.AURA_META.viewContent) {
           window.AURA_META.viewContent(p.page_type || eventName);
         } else if (metaMap[eventName] === "PreviewGenerate") {
           window.AURA_META.trackCustom("PreviewGenerate", {
@@ -111,24 +103,16 @@ window.AURA_ANALYTICS = (function () {
     if (!hasMarketingConsent()) return null;
 
     var leadEventId = options.leadEventId || null;
-    var regEventId = options.regEventId || null;
 
     if (window.AURA_META && window.AURA_META.track) {
       leadEventId =
         leadEventId ||
         (window.AURA_META.makeEventId && window.AURA_META.makeEventId("lead"));
-      regEventId =
-        regEventId ||
-        (window.AURA_META.makeEventId && window.AURA_META.makeEventId("reg"));
+      // Successful form → Lead only (no CompleteRegistration)
       window.AURA_META.track(
         "Lead",
         { content_name: options.contentName || "Lead Form" },
         { eventId: leadEventId }
-      );
-      window.AURA_META.track(
-        "CompleteRegistration",
-        { content_name: options.contentName || "Lead Form" },
-        { eventId: regEventId }
       );
     }
 
@@ -143,10 +127,14 @@ window.AURA_ANALYTICS = (function () {
       form_name: options.formName || "lead",
     });
 
-    return { leadEventId: leadEventId, regEventId: regEventId };
+    return { leadEventId: leadEventId };
   }
 
+  var clicksBound = false;
+
   function bindGlobalClicks() {
+    if (clicksBound) return;
+    clicksBound = true;
     document.addEventListener(
       "click",
       function (e) {
@@ -167,6 +155,7 @@ window.AURA_ANALYTICS = (function () {
           return;
         }
         if (href.indexOf("wa.me") !== -1) {
+          // dataLayer / gtag only — Meta Contact is fired once in meta-pixel.js
           track("click_whatsapp", {
             page_type: document.body.getAttribute("data-page-type") || "",
             service_category: document.body.getAttribute("data-service") || "",

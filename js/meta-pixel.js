@@ -101,9 +101,21 @@ window.AURA_META = (function () {
     });
   }
 
+  var lastContactAt = 0;
+  var lastContactMethod = "";
+  var contactBound = false;
+
   function contact(method) {
+    var name = method || "Contact";
+    var now = Date.now();
+    // Same-click / duplicate-listener guard (one Contact per ~1s per method)
+    if (name === lastContactMethod && now - lastContactAt < 1000) {
+      return null;
+    }
+    lastContactMethod = name;
+    lastContactAt = now;
     return track("Contact", {
-      content_name: method || "Contact",
+      content_name: name,
     });
   }
 
@@ -116,17 +128,35 @@ window.AURA_META = (function () {
   }
 
   function bindContactTracking() {
+    if (contactBound) return;
+    contactBound = true;
     document.addEventListener(
       "click",
       function (e) {
         if (!hasConsent()) return;
-        var wa = e.target.closest ? e.target.closest("#fab-whatsapp, a[href*='wa.me']") : null;
+        // Prefer the actual link; avoid firing twice if both child and parent match
+        var wa = e.target.closest
+          ? e.target.closest("#fab-whatsapp, a[href*='wa.me'], [data-whatsapp], [data-whatsapp-consult]")
+          : null;
         if (wa) {
+          if (e._auraMetaContact) return;
+          e._auraMetaContact = true;
           contact("WhatsApp");
           return;
         }
         var mail = e.target.closest ? e.target.closest("a[href^='mailto:']") : null;
-        if (mail) contact("Email");
+        if (mail) {
+          if (e._auraMetaContact) return;
+          e._auraMetaContact = true;
+          contact("Email");
+          return;
+        }
+        var phone = e.target.closest ? e.target.closest("a[href^='tel:']") : null;
+        if (phone) {
+          if (e._auraMetaContact) return;
+          e._auraMetaContact = true;
+          contact("Phone");
+        }
       },
       true
     );

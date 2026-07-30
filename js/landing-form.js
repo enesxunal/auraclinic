@@ -138,14 +138,10 @@
         window.AURA_META && window.AURA_META.makeEventId
           ? window.AURA_META.makeEventId("lead")
           : "";
-      var regEventId =
-        window.AURA_META && window.AURA_META.makeEventId
-          ? window.AURA_META.makeEventId("reg")
-          : "";
 
       var payload = window.AURA_FORMS.buildPayload(
         Object.assign({}, fields, check.normalized),
-        { leadEventId: leadEventId, regEventId: regEventId }
+        { leadEventId: leadEventId }
       );
 
       window.AURA_FORMS.submitLead(payload)
@@ -166,7 +162,6 @@
               formName: form.getAttribute("data-form-name") || "landing_lead",
               contentName: form.getAttribute("data-form-name") || "Landing Lead",
               leadEventId: leadEventId,
-              regEventId: regEventId,
             });
           }
         })

@@ -390,10 +390,9 @@
         });
       }
 
-      // Prepare conversion event IDs but fire ONLY after API success
+      // Prepare Lead event ID but fire ONLY after API success
       var meta = window.AURA_META || {};
       var leadEventId = meta.makeEventId ? meta.makeEventId("lead") : "";
-      var regEventId = meta.makeEventId ? meta.makeEventId("reg") : "";
 
       var payload = window.AURA_FORMS.buildPayload(
         {
@@ -413,7 +412,7 @@
           honeypot: honeypot,
           website: honeypot,
         },
-        { leadEventId: leadEventId, regEventId: regEventId }
+        { leadEventId: leadEventId }
       );
 
       window.AURA_FORMS.submitLead(payload, { timeoutMs: 20000 }).then(function (result) {
@@ -436,31 +435,25 @@
           return;
         }
 
-        // Success — fire conversions once (skip duplicate retries)
+        // Success — fire Lead once only (skip duplicate retries; no CompleteRegistration)
         if (!(result.data && result.data.duplicate)) {
-        if (window.AURA_ANALYTICS && window.AURA_ANALYTICS.trackLeadConversion) {
-          window.AURA_ANALYTICS.trackLeadConversion({
-            leadEventId: leadEventId,
-            regEventId: regEventId,
-            contentName: "Hair Analysis Form",
-            pageType: "homepage",
-            service: "hair_transplant",
-            language: currentLang,
-            formName: "hair_analysis",
-          });
-        } else {
-          if (meta.track) {
-            meta.track("Lead", { content_name: "Hair Analysis Form" }, { eventId: leadEventId });
-            meta.track(
-              "CompleteRegistration",
-              { content_name: "Hair Analysis Form" },
-              { eventId: regEventId }
-            );
+          if (window.AURA_ANALYTICS && window.AURA_ANALYTICS.trackLeadConversion) {
+            window.AURA_ANALYTICS.trackLeadConversion({
+              leadEventId: leadEventId,
+              contentName: "Hair Analysis Form",
+              pageType: "homepage",
+              service: "hair_transplant",
+              language: currentLang,
+              formName: "hair_analysis",
+            });
+          } else {
+            if (meta.track) {
+              meta.track("Lead", { content_name: "Hair Analysis Form" }, { eventId: leadEventId });
+            }
+            if (window.AURA_GOOGLE && window.AURA_GOOGLE.trackLead) {
+              window.AURA_GOOGLE.trackLead();
+            }
           }
-          if (window.AURA_GOOGLE && window.AURA_GOOGLE.trackLead) {
-            window.AURA_GOOGLE.trackLead();
-          }
-        }
         }
 
         var reportPayload = {
