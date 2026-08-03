@@ -4,7 +4,8 @@
  */
 var rateLimit = require("../lib/rate-limit");
 
-var IMAGE_MODELS = ["gemini-2.5-flash-image", "gemini-3.1-flash-image"];
+// Prefer 3.1 first: stronger editing quality than 2.5 (less copy-paste / smear artifacts).
+var IMAGE_MODELS = ["gemini-3.1-flash-image", "gemini-2.5-flash-image"];
 var MAX_BODY_BYTES = 6 * 1024 * 1024;
 var ALLOWED_MIME = {
   "image/jpeg": true,
@@ -13,39 +14,53 @@ var ALLOWED_MIME = {
   "image/webp": true,
 };
 
+var EDIT_SCOPE =
+  "Using the provided photo, change ONLY the scalp hair: hairline, temples, crown, and thinning/bald zones. " +
+  "Keep everything else exactly the same — face identity, age, skin texture, eyes, nose, mouth, ears, expression, beard (if any), glasses, clothes, pose, camera angle, framing, lighting, shadows, background, and aspect ratio. " +
+  "Do not crop, zoom, mirror, or recolor the photo.";
+
+var HAIR_REALISM =
+  "HAIR REALISM: Grow real individual hair strands with natural direction, slight separation, and soft volume — not a flat color fill. " +
+  "Match the person’s existing hair color, curl/wave pattern, and shine from the sides/back. " +
+  "Blend new hair into the remaining hair so edges look photographic (sharp follicles at the hairline, not airbrushed). " +
+  "Match the photo’s lighting: new hair must cast and receive the same light/shadow as the face and existing hair. " +
+  "FORBIDDEN RESULTS: semi-transparent brown wash, soft smudge, painted blob, blurry helmet, wig plug, plastic shine, cartoon hair, or returning a near-identical copy of the BEFORE photo.";
+
 var HAIR_LENGTH_RULES =
-  "HAIR LENGTH: Show natural grown-out hair after transplant — about 3–5 cm (1–2 inches), like a normal men's short haircut at a barber after 8–12 months. " +
-  "Hair should have visible length and soft texture, combed neatly — NOT a buzz cut, NOT shaved, NOT stubble-only on top. " +
-  "Full coverage on bald/thin areas with real short hair strands you can see. " +
-  "If the BEFORE photo already has longer hair on the sides, keep similar length on top — only fill bald areas with matching natural length. " +
-  "Avoid extremely short cropped scalp, mullet, long flowing hair, spiky mess, or wig-like helmet hair.";
+  "HAIR LENGTH: Show natural grown-out hair about 3–5 cm (1–2 inches), like a neat men’s short barber cut 8–12 months after transplant. " +
+  "Visible strand length and soft texture — NOT buzz cut, NOT shaved, NOT stubble-only on top. " +
+  "If side hair is already longer, match that length on the restored top; only fill missing areas. " +
+  "Avoid mullet, long flowing hair, spiky mess, or helmet hair.";
+
+var DENSITY_RULES =
+  "RESULT MUST BE OBVIOUS: the AFTER must look clearly fuller than BEFORE at a glance — restored hairline/temples and filled thinning zones with good medical density (fuller than moderate, still believable). " +
+  "Soft age-appropriate hairline with slight irregularity (not a ruler-straight line). " +
+  "No celebrity volume or plastic shine.";
 
 var NATURAL_RULES =
-  "STYLE: Realistic medical consultation preview — believable 8–12 months after transplant. " +
-  "The AFTER must be VISIBLY fuller than the BEFORE: clearly improved coverage in thinning and bald areas. " +
-  "Good visible density with natural short hair length — fuller than moderate, but still medically believable. " +
-  "Match original hair color and texture. Soft age-appropriate hairline. " +
-  "No plastic shine or celebrity volume. " +
-  "Keep same face, expression, skin, clothes, pose, lighting and background. " +
+  "PURPOSE: photorealistic clinic consultation preview of successful hair transplant results after 8–12 months. " +
+  DENSITY_RULES +
+  " " +
+  HAIR_REALISM +
+  " " +
   HAIR_LENGTH_RULES;
 
 var TECHNIQUE_PROMPTS = {
   dhiPrecision:
-    "Edit the BEFORE photo into an AFTER preview for DHI precision transplant. " +
-    "Add good visible density at hairline and thinning zones — clearly fuller than BEFORE with natural short hair length (see length rules). " +
+    EDIT_SCOPE +
+    " Simulate a finished DHI precision transplant: restore the frontal hairline and temples with dense, natural short strands and fill thinning zones so coverage is clearly improved. " +
     NATURAL_RULES,
   fueMega:
-    "Edit the BEFORE photo into an AFTER preview for a high-graft FUE session. " +
-    "More grafts = noticeably better coverage on crown and top with natural 3–5 cm hair — clearly fuller than BEFORE. " +
+    EDIT_SCOPE +
+    " Simulate a high-graft FUE result: strongly improve coverage on the crown and top with natural 3–5 cm hair so the bald/thin areas are clearly filled. " +
     NATURAL_RULES,
   nonShavenDhi:
-    "Edit the BEFORE photo into an AFTER preview for non-shaven DHI. " +
-    "Keep the person's existing hair length from the photo; add visible density where thin — clearly improved coverage. " +
-    "Match surrounding hair length naturally. " +
+    EDIT_SCOPE +
+    " Simulate a finished non-shaven DHI result: keep the person’s existing hair length from the photo; densify only thin/bald zones so the restored hair matches surrounding length, color, and texture with an obvious before/after difference. " +
     NATURAL_RULES,
   individual:
-    "Edit the BEFORE photo into an AFTER preview for a personalized FUE/DHI plan. " +
-    "Balanced good visible coverage with a natural hairline — clearly fuller than BEFORE with natural short haircut length. " +
+    EDIT_SCOPE +
+    " Simulate a personalized FUE/DHI plan: balanced natural hairline with clearly fuller coverage on thinning and bald areas. " +
     NATURAL_RULES,
 };
 
@@ -92,26 +107,27 @@ function parseJsonBody(raw) {
 }
 
 function extractImageFromResponse(json) {
+  // Prefer the last image part — higher-res outputs may arrive after a preview part.
+  var found = null;
   var candidates = (json && json.candidates) || [];
   for (var i = 0; i < candidates.length; i++) {
     var parts = (candidates[i].content && candidates[i].content.parts) || [];
     for (var j = 0; j < parts.length; j++) {
       var part = parts[j];
       if (part.inlineData && part.inlineData.data) {
-        return {
+        found = {
           data: part.inlineData.data,
           mimeType: part.inlineData.mimeType || "image/png",
         };
-      }
-      if (part.inline_data && part.inline_data.data) {
-        return {
+      } else if (part.inline_data && part.inline_data.data) {
+        found = {
           data: part.inline_data.data,
           mimeType: part.inline_data.mime_type || "image/png",
         };
       }
     }
   }
-  return null;
+  return found;
 }
 
 function mapGeminiError(status, json) {
@@ -136,11 +152,26 @@ function mapGeminiError(status, json) {
 async function callGeminiImage(apiKey, model, mimeType, photoBase64, techniqueKey) {
   var prompt =
     (TECHNIQUE_PROMPTS[techniqueKey] || TECHNIQUE_PROMPTS.individual) +
-    " This is an illustrative clinic preview only — not a medical guarantee.";
+    " Output one photorealistic edited photo. Illustrative clinic preview only — not a medical guarantee.";
+
+  var generationConfig = {
+    responseModalities: ["TEXT", "IMAGE"],
+    imageConfig: {
+      imageSize: "2K",
+    },
+  };
+
+  // 2.5 Flash Image does not reliably support imageSize — keep modalities only.
+  if (model.indexOf("2.5") !== -1) {
+    generationConfig = {
+      responseModalities: ["TEXT", "IMAGE"],
+    };
+  }
 
   var payload = {
     contents: [
       {
+        role: "user",
         parts: [
           {
             inline_data: {
@@ -152,9 +183,7 @@ async function callGeminiImage(apiKey, model, mimeType, photoBase64, techniqueKe
         ],
       },
     ],
-    generationConfig: {
-      responseModalities: ["TEXT", "IMAGE"],
-    },
+    generationConfig: generationConfig,
   };
 
   var url =
@@ -272,10 +301,16 @@ module.exports = async function handler(req, res) {
         return;
       }
       lastError = result.error;
-      if (result.error && result.error.status !== "quota_exceeded") break;
+      // Retry next model on soft failures; stop on hard auth/billing blocks.
+      var soft =
+        result.error &&
+        (result.error.status === "quota_exceeded" ||
+          result.error.status === "no_image" ||
+          result.error.status === "generation_failed");
+      if (!soft) break;
     } catch (err) {
       lastError = { ok: false, status: "generation_failed" };
-      break;
+      // Try the next model if any remain.
     }
   }
 

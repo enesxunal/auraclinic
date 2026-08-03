@@ -6,8 +6,9 @@ window.AURA_PREVIEW_UI = (function () {
 
   var TECH_KEYS = ["dhiPrecision", "fueMega", "nonShavenDhi", "individual"];
   var MAX_BYTES = 8 * 1024 * 1024;
-  var UPLOAD_MAX_EDGE = 1536;
-  var UPLOAD_JPEG_QUALITY = 0.82;
+  // Higher input detail helps Gemini place realistic hair strands / hairline edges.
+  var UPLOAD_MAX_EDGE = 2048;
+  var UPLOAD_JPEG_QUALITY = 0.9;
 
   function t(key, lang) {
     var core = window.AURA_ANALYSIS;
